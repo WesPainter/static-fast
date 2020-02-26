@@ -1,0 +1,112 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Quickly start Static Server infrastructure on AWS.
+
+Parameters:
+  DomainName:
+    Type: String
+    Description: Enter the (sub-)domain name where your site will be available. (example.com or blog.example.com)
+  BucketName:
+    Type: String
+    Description: Enter a bucket name, or leave blank to use your domain name.
+
+Conditions:
+  HasBucketName:
+    Fn::Not:
+      - Fn::Equals: ['', !Ref BucketName]
+
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketName:
+        Fn::If: [HasBucketName, !Ref BucketName, !Ref DomainName]
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref Bucket
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:GetObject
+            Resource: !Join ['', [!GetAtt Bucket.Arn, /*]]
+            Effect: Allow
+            Principal:
+              AWS: !Join
+                - ' '
+                - - arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity
+                  - !Ref OriginAccessIdentity
+  OriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Join
+          - ' '
+          - - CloudFront OAI for
+            - !Ref DomainName
+  SslCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref DomainName
+      SubjectAlternativeNames:
+        - !Join ['', [www., !Ref DomainName]]
+      ValidationMethod: DNS
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Ref DomainName
+          - !Join ['', [www., !Ref DomainName]]
+        Enabled: true
+        HttpVersion: http2
+        Comment: !Join [' ', [Serving static for, !Ref DomainName]]
+        PriceClass: PriceClass_100
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          TargetOriginId: default-origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          Compress: true
+          DefaultTTL: 2592000
+          MinTTL: 2592000
+          MaxTTL: 2592000
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+        Origins:
+          - DomainName: !GetAtt Bucket.DomainName
+            Id: default-origin
+            S3OriginConfig:
+              OriginAccessIdentity: !Join ['', [origin-access-identity/cloudfront/, !Ref OriginAccessIdentity]]
+        ViewerCertificate:
+          AcmCertificateArn: !Ref SslCertificate
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2018
+  RootDnsRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Name: !Join ['', [!Ref DomainName, .]]
+      Type: A
+      HostedZoneName: !Join ['', [!Ref DomainName, .]]
+      AliasTarget:
+        DNSName: !GetAtt CloudFrontDistribution.DomainName
+        HostedZoneId: Z2FDTNDATAQYW2
+  WwwDnsRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Name: !Join ['', [www., !Ref DomainName, .]]
+      Type: A
+      HostedZoneName: !Join ['', [!Ref DomainName, .]]
+      AliasTarget:
+        DNSName: !GetAtt CloudFrontDistribution.DomainName
+        HostedZoneId: Z2FDTNDATAQYW2
