@@ -17,10 +17,6 @@ If you intend on using a custom domain, you must set it up for use with Route53.
 
 
 ### No download deploy
-
-![GitHub Logo](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)
-Format: ![Alt Text](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?
-stackName=static-fast&templateURL=https://static-fast.s3.amazonaws.com/cloudformation.yml)
-
+[<img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png">](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=static-fast&templateURL=https://static-fast.s3.amazonaws.com/cloudformation.yml)
 
 ### Running It
