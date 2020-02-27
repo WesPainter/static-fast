@@ -5,10 +5,10 @@ Quick(!) launch for a static application deployed exclusively on AWS infrastruct
 
 ### Prerequisits
 
-- Register an AWS Account. [Register](https://portal.aws.amazon.com/billing/signup)
-- Create an admin user with programmatic access keys. [Docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html#id_users_create_console)
-- Download and set up AWS cli. [Docs](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
-- Move your domain to route53 DNS name-servers. [Docs](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/MigratingDNS.html)
+- [Register](https://portal.aws.amazon.com/billing/signup) an AWS Account.
+- [Create](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html#id_users_create_console) an admin user with programmatic access keys.
+- [Download](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) and set up AWS cli with your api keys.
+- [Move](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/MigratingDNS.html) your domain to route53 DNS name-servers.
 
 
 ### Provision
