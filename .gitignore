@@ -1,0 +1,5 @@
+# Ignore build artifacts for project
+*/public
+
+# Mac stuff
+*.DS_Store
