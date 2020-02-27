@@ -2,7 +2,7 @@ name = "static-shock"
 type = "webpack"
 account_id = "8408f07bcb6c08d4b2e353a6e3c4bb9e"
 workers_dev = false
-route = "wesley.dev/*"
+routes = ["www.wesley.dev/*", "wesley.dev/*"]
 zone_id = "37b63e03b07159869f727bfeddf06a87"
 
 [site]
