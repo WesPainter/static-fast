@@ -42,5 +42,3 @@ aws cloudformation delete-stack --stack-name static-fast
 - CloudFrontDistribution
 - RootDnsRecord
 - WwwDnsRecord
-
-####

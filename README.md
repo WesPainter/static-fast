@@ -42,10 +42,12 @@ Additionally, a domain name is needed. It must be configured to utilize name-ser
 /site
 ```
 
-The `site` folder contains a dummy static site built with the [hugo](https://gohugo.io/) framework. The application is simply the end result of following the [quickstart guide](https://gohugo.io/getting-started/quick-start/).
+The public folder a dummy site built with the [hugo](https://gohugo.io/) framework for constructing static sites. The application is simply the end result of following the [quickstart guide](https://gohugo.io/getting-started/quick-start/).
 
 When testing a static site deployment, you must build a fresh copy of the site into a folder named `public` located inside the desired cloud provider. Make sure to include your custom domain. For example, to prepare to deploy to AWS using the domain `example.com`, you would run:
 
 ```
 $ hugo -s site -d ../aws/public -b http://example.com  --cleanDestinationDir
 ```
+
+However, given that the structure of static applications is fairly standard, you may also supply your own pre-built application. The only requirement is that it is in the `public` folder for the given provide
